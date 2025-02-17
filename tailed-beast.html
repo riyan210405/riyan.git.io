@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailed Beast Detail</title>
+</head>
+<body>
+    <div class="container text-center">
+        <h1>Tailed Beast Detail</h1>
+        <div class="card" style="width: 18rem; margin: 20px auto;">
+            <img id="beast-image" class="card-img-top" alt="Tailed Beast Image">
+            <div class="card-body">
+                <h5 id="beast-name" class="card-title"></h5>
+                <p id="beast-description" class="card-text"></p>
+            </div>
+            <!-- Tambahkan deskripsi gambar di bawah gambar tailed beast -->
+            <div id="image-description" class="card-footer text-muted">
+                <p id="beast-image-description" class="card-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ambil ID dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        
+        // Jika ID ada, lakukan request API
+        if (id) {
+            $.ajax({
+                type: 'GET',
+                url: `https://narutodb.xyz/api/tailed-beast/${id}`,
+                success: function(data) {
+                    console.log(data);
+                    
+                    // Update elemen dengan data tailed beast yang diterima
+                    $('#beast-name').text(data.name);
+                    $('#beast-description').text(data.description || 'Tailed Beasts, or what is known as "Bijuu" in the Naruto series, are large creatures that have extraordinary strength and are a symbol of terrible power. They are animal-shaped entities with many tails, each with a different number of tails, ranging from one to nine. Each Bijuu has unique characteristics and powers that make it very respected or feared by many people, even becoming a center of power in the ninja world.');
+                    $('#beast-image').attr('src', data.images[0] || 'https://assets.ggwp.id/2024/04/kurama-hidup-lagi-640x360.jpg');
+
+                    // Tambahkan deskripsi gambar di bawah gambar tailed beast
+                    if (data.images && data.images[0]) {
+                        $('#beast-image-description').text('Bijuu: ' + (data.images[0].description || 'are large creatures that have extraordinary strength and are a symbol of terrible power. '));
+                    } else {
+                        $('#beast-image-description').text('Bijuu:  are large creatures that have extraordinary strength and are a symbol of terrible power.');
+                    }
+                },
+                error: function() {
+                    alert('Failed to load tailed beast data!');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
